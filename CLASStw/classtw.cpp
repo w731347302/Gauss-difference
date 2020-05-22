@@ -22,9 +22,9 @@ bool gussBG(vector<Mat> srcMat, Mat &mMat, Mat &vMat)
 			mMat.at<uchar>(i, j) = sum / Matsize;
 			for (int n = 0; n < Matsize; n++)
 			{
-				var += pow((srcMat[n].at<uchar>(i, j) - mMat.at<uchar>(i, j)),2);
+				var += pow(srcMat[n].at<uchar>(i, j),2);
 			}
-			vMat.at<float>(i, j) = var / Matsize;
+			vMat.at<float>(i, j) = (var / Matsize - pow(mMat.at<uchar>(i, j),2));
 		}
 	}
 	return true;
@@ -40,10 +40,7 @@ bool gussTh(Mat frame, Mat mMat, Mat vMat, float v, Mat &dst)
 		{
 			int x = abs(frame.at<uchar>(i, j) - mMat.at<uchar>(i, j));
 			int th = v * vMat.at<float>(i, j);
-			if (x > th)
-				dst.at<uchar>(i, j) = 255;
-			else
-				dst.at<uchar>(i, j) = 0;
+			x > th ? dst.at<uchar>(i, j) = 255 : dst.at<uchar>(i, j) = 0;
 		}
 	}
 	return true;
@@ -57,8 +54,8 @@ int main()
 	Mat vMat;
 	Mat dst;
 	int cnt = 0;
-	int nBG = 50;
-	float v = 2.5;  //ШЈжи
+	int nBG = 200;
+	float v = 1;  
 	while (1)
 	{
 		vc >> frame;
